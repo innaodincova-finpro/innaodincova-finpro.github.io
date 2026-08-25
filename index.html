@@ -1,0 +1,990 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Инна Одинцова — кабинеты для работы под любую задачу</title>
+<meta name="description" content="Собираю кабинеты — приложения, в которых вся работа помещается в одно окно: расписание, клиенты, деньги, материалы, отчёты. Под любое направление, 2–4 недели до первой рабочей версии.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,600&family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Инна Одинцова — кабинеты для работы">
+<meta property="og:description" content="Расписание, клиенты, деньги, материалы и отчёты — в одном приложении под вашу работу.">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+/* ===== Токены ===== */
+:root {
+  --bg: #f3f6f9;
+  --surface: #f8fafc;
+  --card: #ffffff;
+  --ink: #1c3247;
+  --ink-soft: #6b7e90;
+  --navy: #2c4257;
+  --blue: #2e5878;
+  --ochre: #a8762f;
+  --ochre-mark: #b08347;
+  --now: #c07047;
+  --line: #dfe5ec;
+  --hair: rgba(28, 50, 71, .1);
+  --green: #4f7a5b;
+  --red: #a8443a;
+
+  --r-sm: 8px;
+  --r: 12px;
+  --r-md: 16px;
+  --r-lg: 20px;
+  --r-full: 999px;
+
+  --sh: 0 1px 2px rgba(28, 50, 71, .05);
+  --sh-md: 0 8px 24px rgba(28, 50, 71, .08);
+  --sh-lg: 0 24px 56px rgba(28, 50, 71, .12);
+
+  --f-body: "Golos Text", "Segoe UI", system-ui, sans-serif;
+  --f-disp: "Spectral", Georgia, serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; display: block; }
+
+a { color: inherit; }
+
+/* ===== Шапка ===== */
+.hdr {
+  position: sticky; top: 0; z-index: 40;
+  background: rgba(243, 246, 249, .82);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s ease;
+}
+.hdr.scrolled { border-bottom-color: var(--hair); }
+.hdr-in {
+  max-width: 1200px; margin: 0 auto;
+  padding: 12px 24px;
+  display: flex; align-items: center; gap: 24px;
+}
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; flex: none; }
+.mark {
+  width: 38px; height: 38px; border-radius: var(--r);
+  background: var(--navy); color: var(--ochre-mark);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--f-mono); font-size: 13px; font-weight: 600; letter-spacing: .04em;
+}
+.brand-name { font-family: var(--f-disp); font-size: 17px; font-weight: 600; line-height: 1.15; }
+.brand-role { font-size: 11.5px; color: var(--ink-soft); }
+.nav { display: flex; gap: 24px; margin-left: auto; }
+.nav a { font-size: 13.8px; color: var(--ink-soft); text-decoration: none; white-space: nowrap; }
+.nav a:hover { color: var(--ink); }
+.hdr-cta { margin-left: 8px; }
+.burger {
+  display: none; width: 38px; height: 38px; border-radius: var(--r);
+  border: 1px solid var(--line); background: transparent; color: var(--ink);
+  align-items: center; justify-content: center; cursor: pointer; font-size: 18px;
+  margin-left: auto;
+}
+.mob { display: none; flex-direction: column; padding: 12px 24px 24px; border-top: 1px solid var(--line); background: var(--bg); }
+.mob a { padding: 12px 0; text-decoration: none; border-bottom: 1px solid var(--line); }
+.mob.open { display: flex; }
+
+/* ===== Кнопки ===== */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 13px 24px; border-radius: var(--r);
+  font-family: var(--f-body); font-size: 15px; font-weight: 500;
+  text-decoration: none; cursor: pointer; border: 1px solid transparent;
+  transition: transform .12s ease, box-shadow .2s ease, background-color .2s ease;
+}
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--blue); color: #fff; box-shadow: 0 10px 24px rgba(46, 88, 120, .22); }
+.btn-primary:hover { background: #274c68; }
+.btn-outline { border-color: var(--line); background: var(--card); color: var(--ink); }
+.btn-outline:hover { border-color: var(--blue); }
+.btn-sm { padding: 8px 16px; font-size: 13.5px; }
+.btn-lg { padding: 15px 30px; font-size: 16px; }
+.btn-block { width: 100%; }
+
+/* ===== Каркас ===== */
+main { max-width: 1200px; margin: 0 auto; padding: 0 24px; overflow-x: clip; }
+
+.sec { padding: 80px 0; border-top: 1px solid var(--hair); }
+.sec-head { max-width: 62ch; margin-bottom: 48px; }
+.sec-num { display: block; font-family: var(--f-mono); font-size: 12px; letter-spacing: .12em; color: var(--ochre); margin-bottom: 12px; }
+h2 { font-family: var(--f-disp); font-size: clamp(27px, 2.8vw, 40px); font-weight: 600; line-height: 1.15; letter-spacing: -.01em; margin: 0; text-wrap: balance; }
+.sec-lede { font-size: 16px; line-height: 1.65; color: var(--ink-soft); margin: 16px 0 0; }
+
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.on { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+/* ===== Первый экран ===== */
+.hero { position: relative; display: grid; grid-template-columns: 1.05fr .95fr; gap: 64px; align-items: center; padding: 80px 0 64px; }
+.hero-glow {
+  position: absolute; top: -240px; right: -60px; width: 780px; height: 780px; max-width: 100%;
+  border-radius: 50%; pointer-events: none; z-index: 0;
+  background: radial-gradient(circle, rgba(176,131,71,.16) 0%, rgba(62,107,143,.16) 40%, rgba(243,246,249,0) 72%);
+  filter: blur(14px);
+}
+.hero-grid {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image: linear-gradient(var(--hair) 1px, transparent 1px), linear-gradient(90deg, var(--hair) 1px, transparent 1px);
+  background-size: 58px 58px;
+  -webkit-mask-image: radial-gradient(ellipse at 46% 42%, #000 0%, transparent 58%);
+  mask-image: radial-gradient(ellipse at 46% 42%, #000 0%, transparent 58%);
+}
+.hero > div { position: relative; z-index: 1; }
+.eyebrow {
+  display: inline-block; font-family: var(--f-mono); font-size: 11.5px;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--ochre);
+  border: 1px solid rgba(168,118,47,.4); border-radius: var(--r-full); padding: 4px 12px;
+}
+h1 {
+  font-family: var(--f-disp); font-size: clamp(38px, 4.6vw, 62px); font-weight: 600;
+  line-height: 1.08; letter-spacing: -.015em; margin: 24px 0 0; max-width: 15ch; text-wrap: balance;
+}
+h1 em { font-style: italic; color: var(--ochre); }
+.lede { font-size: 17px; line-height: 1.65; color: var(--ink-soft); max-width: 52ch; margin: 24px 0 0; }
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 32px; }
+.hero-stats { display: flex; gap: 32px; flex-wrap: wrap; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--line); }
+.hero-stat span { display: block; font-size: 11.5px; text-transform: uppercase; letter-spacing: .09em; color: var(--ink-soft); }
+.hero-stat b { font-family: var(--f-mono); font-size: 17px; font-weight: 500; }
+.hero-cap { font-size: 12px; color: var(--ink-soft); text-align: center; margin-top: 12px; }
+
+/* ===== Макет кабинета ===== */
+.mock { border: 1px solid var(--hair); border-radius: var(--r-lg); background: var(--card); box-shadow: var(--sh-lg); overflow: hidden; }
+.mock-chrome { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: var(--navy); }
+.mock-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.28); }
+.mock-title { margin-left: 12px; font-family: var(--f-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.65); }
+.mock-body { padding: 24px; display: flex; flex-direction: column; gap: 24px; }
+.mock-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
+.mock-day { font-size: 11.5px; text-transform: uppercase; letter-spacing: .1em; color: var(--ink-soft); }
+.mock-date { font-family: var(--f-disp); font-size: 24px; font-weight: 600; line-height: 1.1; }
+.mock-chips { display: flex; gap: 8px; }
+.mock-chip { font-family: var(--f-mono); font-size: 11px; color: var(--ink-soft); border: 1px solid var(--line); border-radius: var(--r-full); padding: 3px 10px; }
+.rail { position: relative; display: flex; flex-direction: column; gap: 12px; padding-left: 62px; }
+.rail::before { content: ""; position: absolute; left: 52px; top: 6px; bottom: 6px; width: 1px; background: rgba(44,66,87,.25); }
+.row { position: relative; }
+.row-time { position: absolute; left: -62px; top: 10px; width: 44px; text-align: right; font-family: var(--f-mono); font-size: 11.5px; color: var(--ink-soft); }
+.row-mk { position: absolute; left: -11px; top: 15px; width: 7px; height: 7px; border-radius: 50%; background: var(--card); border: 1.5px solid var(--ochre-mark); }
+.row-card { border: 1px solid var(--hair); border-radius: var(--r); padding: 11px 16px; background: var(--surface); }
+.row-card b { display: block; font-size: 14.5px; font-weight: 500; }
+.row-card i { display: block; font-style: normal; font-size: 12.5px; color: var(--ink-soft); margin-top: 2px; }
+.row-card s { display: block; text-decoration: none; font-family: var(--f-mono); font-size: 10.5px; color: var(--ink-soft); margin-top: 8px; }
+.row.done .row-card { opacity: .72; }
+.row.now .row-mk { background: var(--now); border-color: var(--now); box-shadow: 0 0 0 4px rgba(192,112,71,.16); }
+.row.now .row-card { border-color: rgba(192,112,71,.5); box-shadow: var(--sh-md); }
+.row.now .row-time { color: var(--now); }
+.row.now .row-card s { color: var(--now); }
+.mock-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; border-top: 1px solid var(--line); padding-top: 16px; }
+.mock-tile span { display: block; font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-soft); }
+.mock-tile b { font-family: var(--f-mono); font-size: 21px; font-weight: 500; display: inline-block; margin-right: 5px; }
+.mock-tile b.money { color: var(--ochre); }
+.mock-tile i { font-style: normal; font-size: 11.5px; color: var(--ink-soft); }
+
+/* ===== Что такое кабинет ===== */
+.cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.not { border-left: 2px solid var(--ochre-mark); padding: 4px 0 8px 24px; }
+.not b { display: block; font-family: var(--f-disp); font-size: 19px; font-weight: 600; margin-bottom: 12px; }
+.not p { margin: 0; font-size: 15px; line-height: 1.65; color: var(--ink-soft); }
+
+/* ===== До / после ===== */
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.cmp { border: 1px solid var(--hair); border-radius: var(--r-md); padding: 32px; }
+.cmp.before { background: var(--surface); }
+.cmp.after { background: linear-gradient(160deg, rgba(46,88,120,.08) 0%, #fff 48%); border-color: rgba(46,88,120,.35); box-shadow: var(--sh-md); }
+.cmp h3 { font-family: var(--f-mono); font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); margin: 0 0 24px; font-weight: 400; }
+.cmp.after h3 { color: var(--blue); }
+.cmp ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 16px; }
+.cmp li { display: flex; gap: 12px; font-size: 15.5px; line-height: 1.55; }
+.cmp.before li { color: var(--ink-soft); }
+.ic { flex: none; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; margin-top: 2px; }
+.ic-minus { background: #e9eef4; color: var(--ink-soft); }
+.ic-check { background: rgba(79,122,91,.15); color: var(--green); }
+
+/* ===== Конструктор ===== */
+.mods { display: grid; grid-template-columns: repeat(auto-fill, minmax(255px, 1fr)); gap: 12px; }
+.mod {
+  text-align: left; padding: 16px; border: 1px solid var(--hair); border-radius: var(--r-md);
+  background: #fff; cursor: pointer; font-family: var(--f-body);
+  transition: border-color .14s ease, transform .14s ease, box-shadow .2s ease;
+}
+.mod:hover { border-color: rgba(46,88,120,.4); box-shadow: var(--sh-md); transform: translateY(-1px); }
+.mod.on { border-color: rgba(46,88,120,.55); background: linear-gradient(160deg, rgba(46,88,120,.1) 0%, #fff 60%); }
+.mod-top { display: flex; align-items: center; gap: 12px; }
+.mod-i { width: 32px; height: 32px; border-radius: var(--r); background: rgba(62,107,143,.12); color: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 15px; flex: none; }
+.mod.on .mod-i { background: var(--navy); color: var(--ochre-mark); }
+.mod-t { font-size: 15px; font-weight: 500; }
+.mod-box { margin-left: auto; width: 20px; height: 20px; border-radius: var(--r-sm); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; flex: none; }
+.mod.on .mod-box { background: var(--blue); border-color: var(--blue); }
+.mod p { margin: 8px 0 0; font-size: 13.5px; line-height: 1.55; color: var(--ink-soft); }
+.sum {
+  display: flex; align-items: center; gap: 32px; flex-wrap: wrap; margin-top: 24px;
+  padding: 24px; border: 1px solid var(--hair); border-radius: var(--r-md);
+  background: linear-gradient(150deg, rgba(46,88,120,.1) 0%, #fff 58%);
+}
+.sum-n { display: flex; align-items: center; gap: 24px; }
+.sum-i b { display: block; font-family: var(--f-mono); font-size: 32px; font-weight: 500; line-height: 1; color: var(--ochre); }
+.sum-i span { font-size: 12.5px; color: var(--ink-soft); }
+.sum-div { width: 1px; height: 38px; background: var(--line); }
+.sum p { flex: 1 1 260px; margin: 0; font-size: 13.5px; line-height: 1.55; color: var(--ink-soft); max-width: 42ch; }
+
+/* ===== Направления ===== */
+.dirs { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
+.dir { display: flex; flex-direction: column; gap: 12px; padding: 24px; border: 1px solid var(--hair); border-radius: var(--r-md); background: #fff; transition: border-color .14s ease, box-shadow .2s ease; }
+.dir:hover { border-color: rgba(46,88,120,.4); box-shadow: var(--sh-md); }
+.dir-i { width: 40px; height: 40px; border-radius: var(--r); background: rgba(62,107,143,.12); color: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 19px; }
+.dir b { font-size: 16px; }
+.dir p { margin: 0; font-size: 14px; line-height: 1.6; color: var(--ink-soft); }
+.dir.accent { background: linear-gradient(160deg, rgba(46,88,120,.1) 0%, #fff 55%); border-color: rgba(46,88,120,.35); }
+.dir.accent .dir-i { background: var(--navy); color: var(--ochre-mark); }
+.dir a { margin-top: auto; font-size: 13.5px; color: var(--blue); text-decoration: none; }
+.dir a:hover { text-decoration: underline; }
+
+/* ===== Кейсы ===== */
+.cases { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px; }
+.case { display: flex; flex-direction: column; gap: 16px; padding: 24px; border: 1px solid var(--hair); border-radius: var(--r-md); background: #fff; box-shadow: var(--sh); }
+.case-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.case-name { font-family: var(--f-disp); font-size: 21px; font-weight: 600; line-height: 1.2; }
+.case-kind { display: block; font-size: 13px; color: var(--ink-soft); margin-top: 4px; }
+.badge { flex: none; font-size: 11.5px; border-radius: var(--r-full); padding: 3px 10px; white-space: nowrap; }
+.badge.live { background: rgba(79,122,91,.14); color: var(--green); }
+.badge.pilot { background: rgba(184,112,63,.14); color: #b8703f; }
+.badge.done { background: #eef2f6; color: var(--ink-soft); }
+.case-b span { display: block; font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 2px; }
+.case-b p { margin: 0; font-size: 14.5px; line-height: 1.6; }
+.case-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--hair); }
+.tag { font-size: 12px; color: var(--ink-soft); border: 1px solid var(--hair); border-radius: var(--r-full); padding: 2px 12px; }
+.cases-note { margin: 32px 0 0; font-size: 14.5px; line-height: 1.65; color: var(--ink-soft); max-width: 78ch; }
+
+/* ===== Шаги ===== */
+.steps { list-style: none; margin: 0; padding: 0 0 0 48px; position: relative; display: flex; flex-direction: column; gap: 32px; }
+.steps::before { content: ""; position: absolute; left: 17px; top: 8px; bottom: 8px; width: 1px; background: rgba(44,66,87,.22); }
+.step { position: relative; }
+.step-n { position: absolute; left: -48px; top: 0; width: 36px; height: 36px; border-radius: 50%; background: var(--bg); border: 1px solid var(--ochre-mark); color: var(--ochre); font-family: var(--f-mono); font-size: 11.5px; display: flex; align-items: center; justify-content: center; }
+.step-h { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+.step-h b { font-family: var(--f-disp); font-size: 22px; font-weight: 600; }
+.step-time { font-family: var(--f-mono); font-size: 11.5px; color: var(--ochre); border: 1px solid rgba(168,118,47,.35); border-radius: var(--r-full); padding: 2px 12px; }
+.step p { margin: 8px 0 0; font-size: 15.5px; line-height: 1.65; color: var(--ink-soft); max-width: 76ch; }
+
+/* ===== Принципы ===== */
+.prins { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.prin { display: flex; flex-direction: column; gap: 12px; padding: 32px; border: 1px solid var(--hair); border-radius: var(--r-md); background: #fff; }
+.prin-i { width: 42px; height: 42px; border-radius: var(--r); background: var(--navy); color: var(--ochre-mark); display: flex; align-items: center; justify-content: center; font-size: 19px; }
+.prin b { font-family: var(--f-disp); font-size: 20px; font-weight: 600; }
+.prin p { margin: 0; font-size: 15px; line-height: 1.65; color: var(--ink-soft); }
+
+/* ===== Форматы ===== */
+.plans { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.plan { position: relative; display: flex; flex-direction: column; gap: 12px; padding: 24px; border: 1px solid var(--hair); border-radius: var(--r-md); background: #fff; }
+.plan.feat { border-color: rgba(46,88,120,.5); background: linear-gradient(170deg, rgba(46,88,120,.1) 0%, #fff 50%); box-shadow: var(--sh-md); }
+.plan-mark { position: absolute; top: -12px; left: 24px; font-family: var(--f-mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; background: var(--blue); color: #fff; border-radius: var(--r-full); padding: 3px 12px; }
+.plan b.n { font-size: 16px; }
+.plan .price { font-family: var(--f-mono); font-size: 20px; color: var(--ochre); line-height: 1.1; }
+.plan .sub { font-size: 12.5px; color: var(--ink-soft); padding-bottom: 12px; border-bottom: 1px solid var(--hair); }
+.plan ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.plan li { display: flex; gap: 8px; font-size: 13.5px; line-height: 1.5; color: var(--ink-soft); }
+.plan .btn { margin-top: auto; }
+.plans-note { margin: 32px 0 0; font-size: 14px; color: var(--ink-soft); }
+
+/* ===== Вопросы ===== */
+.faq { max-width: 860px; }
+.faq details { border-bottom: 1px solid var(--hair); }
+.faq summary { list-style: none; cursor: pointer; padding: 20px 40px 20px 0; font-size: 16px; font-weight: 500; position: relative; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; position: absolute; right: 8px; top: 18px; font-size: 22px; color: var(--ink-soft); font-weight: 400; }
+.faq details[open] summary::after { content: "–"; }
+.faq p { margin: 0 0 20px; font-size: 15px; line-height: 1.7; color: var(--ink-soft); max-width: 78ch; }
+
+/* ===== Форма ===== */
+.form-wrap { display: grid; grid-template-columns: .85fr 1.15fr; gap: 48px; align-items: start; }
+.form-side ul { list-style: none; margin: 32px 0 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.form-side li { display: flex; gap: 12px; font-size: 14.5px; line-height: 1.5; }
+.contacts { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--line); }
+.contacts p { margin: 0 0 8px; font-size: 13px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: .08em; }
+.contacts a { display: inline-flex; align-items: center; gap: 8px; font-size: 15.5px; color: var(--blue); text-decoration: none; margin-right: 20px; }
+.contacts a:hover { text-decoration: underline; }
+
+form.req { display: flex; flex-direction: column; gap: 16px; padding: 32px; border: 1px solid var(--hair); border-radius: var(--r-md); background: #fff; box-shadow: var(--sh-md); }
+.f-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.f { display: flex; flex-direction: column; gap: 8px; }
+.f label { font-size: 13px; color: var(--ink-soft); }
+.f input, .f select, .f textarea {
+  font-family: var(--f-body); font-size: 15px; color: var(--ink);
+  padding: 11px 14px; border: 1px solid var(--line); border-radius: var(--r);
+  background: #fff; width: 100%;
+}
+.f textarea { resize: vertical; min-height: 120px; line-height: 1.55; }
+.f input:focus, .f select:focus, .f textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(46,88,120,.18); }
+.consent { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding-top: 4px; }
+.consent input { margin-top: 3px; width: 17px; height: 17px; flex: none; accent-color: var(--blue); }
+.consent span { font-size: 13px; line-height: 1.55; color: var(--ink-soft); }
+.consent a { color: var(--blue); }
+.f-foot { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
+.f-note { font-size: 12.5px; color: var(--ink-soft); }
+.msg { padding: 12px 16px; border-radius: var(--r); font-size: 14px; display: none; }
+.msg.err { display: block; background: rgba(168,68,58,.1); color: var(--red); }
+.done-box { display: none; flex-direction: column; gap: 12px; padding: 48px 32px; border: 1px solid rgba(79,122,91,.45); border-radius: var(--r-md); background: #fff; }
+.done-box.show { display: flex; }
+.done-box b { font-family: var(--f-disp); font-size: 24px; font-weight: 600; }
+.done-box p { margin: 0; font-size: 15px; line-height: 1.65; color: var(--ink-soft); max-width: 56ch; }
+
+/* ===== Подвал ===== */
+footer { background: var(--navy); color: #e6ecf2; padding: 64px 24px 32px; margin-top: 80px; }
+.f-in { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 48px; }
+.f-brand { display: flex; align-items: center; gap: 12px; }
+.f-mark { width: 36px; height: 36px; border-radius: var(--r); border: 1px solid rgba(255,255,255,.3); color: var(--ochre-mark); display: flex; align-items: center; justify-content: center; font-family: var(--f-mono); font-size: 12.5px; font-weight: 600; }
+.f-name { font-family: var(--f-disp); font-size: 18px; font-weight: 600; }
+.f-tag { font-size: 14.5px; line-height: 1.6; color: rgba(230,236,242,.72); margin: 16px 0 0; max-width: 44ch; }
+.f-col { display: flex; flex-direction: column; gap: 12px; }
+.f-col b { font-size: 11.5px; text-transform: uppercase; letter-spacing: .09em; color: var(--ochre-mark); font-weight: 400; }
+.f-col a { font-size: 14px; color: rgba(230,236,242,.8); text-decoration: none; }
+.f-col a:hover { color: #fff; }
+.f-bot { max-width: 1200px; margin: 48px auto 0; padding-top: 24px; border-top: 1px solid rgba(255,255,255,.18); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.f-bot span, .f-bot a { font-family: var(--f-mono); font-size: 12px; color: rgba(230,236,242,.55); text-decoration: none; }
+
+/* ===== Адаптив ===== */
+@media (max-width: 1080px) {
+  .nav, .hdr-cta { display: none; }
+  .burger { display: flex; }
+}
+@media (max-width: 1000px) {
+  .hero { grid-template-columns: 1fr; gap: 48px; padding-top: 48px; }
+  h1 { max-width: 20ch; }
+  .cols3, .compare, .prins { grid-template-columns: 1fr; }
+  .plans { grid-template-columns: repeat(2, 1fr); }
+  .form-wrap { grid-template-columns: 1fr; gap: 32px; }
+  .f-in { grid-template-columns: 1fr 1fr; }
+  .f-brand-col { grid-column: 1 / -1; }
+}
+@media (max-width: 620px) {
+  main { padding: 0 16px; }
+  .sec { padding: 48px 0; }
+  .plans { grid-template-columns: 1fr; }
+  .cmp, .prin, form.req { padding: 20px; }
+  .f-row { grid-template-columns: 1fr; }
+  .steps { padding-left: 32px; }
+  .steps::before { left: 13px; }
+  .step-n { left: -32px; width: 28px; height: 28px; font-size: 10.5px; }
+  .mock-body { padding: 16px; }
+  .rail { padding-left: 54px; }
+  .rail::before { left: 44px; }
+  .row-time { left: -54px; width: 38px; }
+  .f-in { grid-template-columns: 1fr; gap: 32px; }
+  footer { padding: 48px 16px 24px; }
+}
+
+</style>
+</head>
+<body>
+<header class="hdr" id="hdr">
+  <div class="hdr-in">
+    <a class="brand" href="#top">
+      <span class="mark">ИО</span>
+      <span>
+        <span class="brand-name">Инна Одинцова</span><br>
+        <span class="brand-role">кабинеты для работы</span>
+      </span>
+    </a>
+    <nav class="nav">
+      <a href="#chto-takoe">Что такое кабинет</a>
+      <a href="#konstruktor">Из чего собирается</a>
+      <a href="#napravleniya">Направления</a>
+      <a href="#keysy">Кейсы</a>
+      <a href="#rabota">Как работаем</a>
+      <a href="#stoimost">Форматы</a>
+    </nav>
+    <a class="btn btn-primary btn-sm hdr-cta" href="#zayavka">Обсудить задачу</a>
+    <button class="burger" id="burger" aria-label="Меню">☰</button>
+  </div>
+  <div class="mob" id="mob">
+    <a href="#chto-takoe">Что такое кабинет</a>
+    <a href="#konstruktor">Из чего собирается</a>
+    <a href="#napravleniya">Направления</a>
+    <a href="#keysy">Кейсы</a>
+    <a href="#rabota">Как работаем</a>
+    <a href="#stoimost">Форматы</a>
+    <a class="btn btn-primary btn-block" href="#zayavka" style="margin-top:16px">Обсудить задачу</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ПЕРВЫЙ ЭКРАН -->
+  <section class="hero">
+    <span class="hero-glow"></span>
+    <span class="hero-grid"></span>
+    <div>
+      <span class="eyebrow">Кабинеты под задачу</span>
+      <h1>Вся ваша работа&nbsp;— <em>в одном окне</em></h1>
+      <p class="lede">Я собираю кабинеты: приложения, где расписание, клиенты, деньги, материалы и отчёты живут вместе и считаются сами. Не готовый сервис, под который надо подстраиваться, а инструмент, собранный под то, как работаете именно вы. Направление — любое.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary btn-lg" href="#zayavka">Обсудить задачу →</a>
+        <a class="btn btn-outline btn-lg" href="#keysy">Посмотреть кабинеты</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><span>До рабочей версии</span><b>2–4 недели</b></div>
+        <div class="hero-stat"><span>Чтобы начать</span><b>1 разговор</b></div>
+        <div class="hero-stat"><span>Данные</span><b>остаются у вас</b></div>
+      </div>
+    </div>
+    <div>
+      <div class="mock">
+        <div class="mock-chrome"><i class="mock-dot"></i><i class="mock-dot"></i><i class="mock-dot"></i><span class="mock-title">Кабинет · Сегодня</span></div>
+        <div class="mock-body">
+          <div class="mock-head">
+            <div><div class="mock-day">Вторник</div><div class="mock-date">25 августа</div></div>
+            <div class="mock-chips"><span class="mock-chip">4 занятия</span><span class="mock-chip">0 долгов</span></div>
+          </div>
+          <div class="rail">
+            <div class="row done"><span class="row-time">09:00</span><span class="row-mk"></span><div class="row-card"><b>Дроби: сложение и вычитание</b><i>Артём, 5 класс · онлайн</i><s>проведено · оплачено</s></div></div>
+            <div class="row done"><span class="row-time">10:30</span><span class="row-mk"></span><div class="row-card"><b>Проценты в задачах</b><i>Группа 6А · 3 человека</i><s>проведено · 2 из 3</s></div></div>
+            <div class="row now"><span class="row-time">12:00</span><span class="row-mk"></span><div class="row-card"><b>Линейные уравнения</b><i>Соня, 7 класс · онлайн</i><s>идёт сейчас · доска</s></div></div>
+            <div class="row"><span class="row-time">14:00</span><span class="row-mk"></span><div class="row-card"><b>Подготовка к ОГЭ: модуль 2</b><i>Кирилл, 9 класс</i><s>план урока готов</s></div></div>
+          </div>
+          <div class="mock-tiles">
+            <div class="mock-tile"><span>За месяц</span><b>48</b><i>занятий</i></div>
+            <div class="mock-tile"><span>Оплачено</span><b class="money">62 400</b><i>₽</i></div>
+            <div class="mock-tile"><span>Отчёты</span><b>6</b><i>готовы</i></div>
+          </div>
+        </div>
+      </div>
+      <p class="hero-cap">Фрагмент настоящего кабинета репетитора «Точка решения»</p>
+    </div>
+  </section>
+
+  <!-- ЧТО ТАКОЕ КАБИНЕТ -->
+  <section class="sec reveal" id="chto-takoe">
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2>Что такое кабинет</h2>
+      <p class="sec-lede">Кабинет — это ваше рабочее место, перенесённое в одно приложение. Проще всего объяснить через то, чем он не является.</p>
+    </div>
+    <div class="cols3">
+      <div class="not"><b>Это не сайт-визитка</b><p>Визитка рассказывает о вас другим. Кабинет работает на вас каждый день: в нём ведут записи, считают деньги, готовят документы. Витрину для клиентов можно добавить отдельным блоком.</p></div>
+      <div class="not"><b>Это не ещё одна таблица</b><p>Таблица помнит цифры, но ничего не связывает. В кабинете занятие, ученик, оплата и отчёт — одно и то же событие: отметили встречу — пересчитался долг и обновился отчёт.</p></div>
+      <div class="not"><b>Это не конструктор</b><p>Вам не придётся ничего настраивать, соединять сервисы и держать в голове, где что лежит. Настройка — моя часть работы. Ваша — открыть и работать.</p></div>
+    </div>
+  </section>
+
+  <!-- ДО / ПОСЛЕ -->
+  <section class="sec reveal">
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2>Что меняется на практике</h2>
+    </div>
+    <div class="compare">
+      <div class="cmp before">
+        <h3>Сейчас</h3>
+        <ul>
+          <li><span class="ic ic-minus">−</span>Расписание в одном месте, деньги — в другом, файлы — в третьем</li>
+          <li><span class="ic ic-minus">−</span>«Кто оплатил, а кто нет» вспоминается по переписке</li>
+          <li><span class="ic ic-minus">−</span>Отчёт клиенту собирается руками по часу</li>
+          <li><span class="ic ic-minus">−</span>Перенос встречи правится в трёх местах</li>
+          <li><span class="ic ic-minus">−</span>Половина учёта живёт в телефоне и в голове</li>
+        </ul>
+      </div>
+      <div class="cmp after">
+        <h3>С кабинетом</h3>
+        <ul>
+          <li><span class="ic ic-check">✓</span>Один экран, на котором виден весь рабочий день</li>
+          <li><span class="ic ic-check">✓</span>Начислено, оплачено и долг считаются сами</li>
+          <li><span class="ic ic-check">✓</span>Отчёт и документ — одна кнопка</li>
+          <li><span class="ic ic-check">✓</span>Перенос — одно движение, всё пересчитывается</li>
+          <li><span class="ic ic-check">✓</span>Копия всех данных у вас, восстанавливается в один клик</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- КОНСТРУКТОР -->
+  <section class="sec reveal" id="konstruktor">
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2>Из чего собирается кабинет</h2>
+      <p class="sec-lede">Отметьте то, что нужно вам — увидите примерный состав и срок. Это не форма заказа, а способ подумать вслух: что действительно нужно в первой версии, а что подождёт.</p>
+    </div>
+    <div class="mods" id="mods"></div>
+    <div class="sum">
+      <div class="sum-n">
+        <div class="sum-i"><b id="sumCount">4</b><span id="sumCountLabel">блока выбрано</span></div>
+        <span class="sum-div"></span>
+        <div class="sum-i"><b id="sumWeeks">~5</b><span id="sumWeeksLabel">недель до рабочей версии</span></div>
+      </div>
+      <p>Оценка ориентировочная: точный срок называю после разговора, когда понятно, как устроена ваша работа.</p>
+      <a class="btn btn-primary btn-lg" href="#zayavka">Обсудить такой кабинет</a>
+    </div>
+  </section>
+
+  <!-- НАПРАВЛЕНИЯ -->
+  <section class="sec reveal" id="napravleniya">
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <h2>Для каких направлений</h2>
+      <p class="sec-lede">Разница между отраслями — в названиях (ученик, клиент, пациент, заявка) и паре блоков. Устройство инструмента одно и то же.</p>
+    </div>
+    <div class="dirs">
+      <div class="dir"><span class="dir-i">🎓</span><b>Репетиторы и преподаватели</b><p>Ученики, расписание, темы, оплаты, отчёты родителям.</p></div>
+      <div class="dir"><span class="dir-i">🧸</span><b>Школы, курсы, детские центры</b><p>Группы, абонементы, посещаемость, педагоги, залы.</p></div>
+      <div class="dir"><span class="dir-i">📷</span><b>Фотографы и видеографы</b><p>Съёмки, договорённости, выдача галерей клиенту.</p></div>
+      <div class="dir"><span class="dir-i">✂️</span><b>Мастера и студии услуг</b><p>Запись, повторные визиты, расходники, выручка.</p></div>
+      <div class="dir"><span class="dir-i">🩺</span><b>Психологи, клиники, кабинеты</b><p>Приёмы, история работы, документы, напоминания.</p></div>
+      <div class="dir"><span class="dir-i">⚖️</span><b>Юристы, бухгалтеры, консультанты</b><p>Дела и сроки, документы по клиенту, счета и акты.</p></div>
+      <div class="dir"><span class="dir-i">📦</span><b>Магазины, склады, производство</b><p>Заказы, остатки, себестоимость, простая аналитика.</p></div>
+      <div class="dir"><span class="dir-i">🏢</span><b>Отделы внутри компании</b><p>Заявки, согласования, реестры, отчётность вместо Excel.</p></div>
+      <div class="dir accent">
+        <span class="dir-i">✳️</span><b>Вашего направления нет в списке?</b>
+        <p>Это ничего не меняет. Расскажите, как устроен ваш день, — вместе поймём, какие блоки нужны.</p>
+        <a href="#zayavka">Рассказать о задаче →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- КЕЙСЫ -->
+  <section class="sec reveal" id="keysy">
+    <div class="sec-head">
+      <span class="sec-num">05</span>
+      <h2>Собранные кабинеты</h2>
+      <p class="sec-lede">Не макеты — работающие вещи. У каждой написано, какая была задача и что получилось.</p>
+    </div>
+    <div class="cases">
+
+      <div class="case">
+        <div class="case-top">
+          <div><div class="case-name">«Точка решения»</div><span class="case-kind">Кабинет репетитора по математике</span></div>
+          <span class="badge live">Работает каждый день</span>
+        </div>
+        <div class="case-b"><span>Было</span><p>Занятия в календаре, оплаты в тетради, доска отдельно, учебники — в папках на компьютере.</p></div>
+        <div class="case-b"><span>Стало</span><p>Линия дня, карточка занятия с планом, расписание с проверкой наложений, банк из 225 тем с методикой, ведомость посещений и оплат, отчёт родителям в Word одной кнопкой, звонок и доска в одном окне, учебник листается прямо в кабинете. Работает офлайн, ярлык на рабочем столе.</p></div>
+        <div class="case-tags"><span class="tag">расписание</span><span class="tag">деньги</span><span class="tag">материалы</span><span class="tag">отчёты</span><span class="tag">видео и доска</span></div>
+      </div>
+
+      <div class="case">
+        <div class="case-top">
+          <div><div class="case-name">Кабинет английского</div><span class="case-kind">Та же основа под другой предмет</span></div>
+          <span class="badge done">Собран</span>
+        </div>
+        <div class="case-b"><span>Было</span><p>Нужно было доказать, что кабинет переносится на соседнее направление, а не пишется заново.</p></div>
+        <div class="case-b"><span>Стало</span><p>Свой банк тем и материалов, свои формулировки — при том же расписании, учёте денег и отчётности. Перенос занял дни, а не месяцы.</p></div>
+        <div class="case-tags"><span class="tag">перенос решения</span><span class="tag">свой контент</span></div>
+      </div>
+
+      <div class="case">
+        <div class="case-top">
+          <div><div class="case-name">FINPRO</div><span class="case-kind">Платформа финансового анализа по РСБУ</span></div>
+          <span class="badge live">В работе</span>
+        </div>
+        <div class="case-b"><span>Было</span><p>Анализ отчётности собирался в Excel руками, а данные компаний нельзя выкладывать в чужие сервисы.</p></div>
+        <div class="case-b"><span>Стало</span><p>Загрузка отчётности, расчёт показателей, готовое заключение. Работает в браузере без интернета — ничего не уходит наружу.</p></div>
+        <div class="case-tags"><span class="tag">расчёты</span><span class="tag">документы</span><span class="tag">офлайн</span></div>
+      </div>
+
+      <div class="case">
+        <div class="case-top">
+          <div><div class="case-name">Центр управления разработками</div><span class="case-kind">Личный хаб проектов</span></div>
+          <span class="badge live">Работает</span>
+        </div>
+        <div class="case-b"><span>Было</span><p>Проектов много, состояние каждого держалось в голове и в разных переписках.</p></div>
+        <div class="case-b"><span>Стало</span><p>Все проекты, стадии, риски, решения, подписки и журнал событий в одной панели. Готовность считается сама — по подтверждённым задачам, а не по ощущению.</p></div>
+        <div class="case-tags"><span class="tag">панель управления</span><span class="tag">статусы</span><span class="tag">журнал</span></div>
+      </div>
+
+      <div class="case">
+        <div class="case-top">
+          <div><div class="case-name">ЗачётСам</div><span class="case-kind">Помощник студенту</span></div>
+          <span class="badge pilot">Пилот на реальных студентах</span>
+        </div>
+        <div class="case-b"><span>Было</span><p>Студент тонет в методичке и не понимает, с чего начать свою работу.</p></div>
+        <div class="case-b"><span>Стало</span><p>По его собственной методичке и материалам собирается связный черновик, который он дальше доводит сам. Честная позиция: помощник, а не подмена работы.</p></div>
+        <div class="case-tags"><span class="tag">ИИ внутри</span><span class="tag">документы</span></div>
+      </div>
+
+      <div class="case">
+        <div class="case-top">
+          <div><div class="case-name">Рабочий журнал репетитора</div><span class="case-kind">Бумажный планер → интерактивный файл</span></div>
+          <span class="badge done">Передан</span>
+        </div>
+        <div class="case-b"><span>Было</span><p>126-страничный планер существовал только на бумаге: заполнять от руки, считать самой.</p></div>
+        <div class="case-b"><span>Стало</span><p>18 822 поля для ввода, галочки, страницы доходов и расходов считают итоги сами. Дизайн и нумерация автора не тронуты.</p></div>
+        <div class="case-tags"><span class="tag">документы</span><span class="tag">расчёты</span></div>
+      </div>
+
+    </div>
+    <p class="cases-note">Кроме этого в работе: кабинет фотографа (портфолио, бронирование, выдача галерей), подборщик ухода по типу кожи для косметической марки и трёхуровневый курс финансового анализа с практикой в Excel.</p>
+  </section>
+
+  <!-- КАК РАБОТАЕМ -->
+  <section class="sec reveal" id="rabota">
+    <div class="sec-head">
+      <span class="sec-num">06</span>
+      <h2>Как проходит работа</h2>
+      <p class="sec-lede">Пять шагов. На каждом видно, что происходит, что делаете вы и что делаю я.</p>
+    </div>
+    <ol class="steps">
+      <li class="step"><span class="step-n">01</span><div class="step-h"><b>Разговор</b><span class="step-time">40–60 минут</span></div><p>Вы рассказываете, как проходит ваш рабочий день. Я записываю, где что теряется и что приходится держать в голове. Ничего показывать и готовить заранее не нужно.</p></li>
+      <li class="step"><span class="step-n">02</span><div class="step-h"><b>Карта задачи</b><span class="step-time">2–3 дня</span></div><p>Присылаю одну страницу: какие блоки нужны, что войдёт в первую версию, что отложим, срок и стоимость. Пока вы не согласились — работа не начинается.</p></li>
+      <li class="step"><span class="step-n">03</span><div class="step-h"><b>Первая рабочая версия</b><span class="step-time">2–4 недели</span></div><p>Вы открываете кабинет и заводите в него настоящие данные. Не картинку и не демо — инструмент, в котором уже можно работать.</p></li>
+      <li class="step"><span class="step-n">04</span><div class="step-h"><b>Правки на живой работе</b><span class="step-time">2–4 недели</span></div><p>Вы работаете, я правлю по вашим замечаниям. Это самая важная часть: кабинет доводится под вас, а не под техническое задание.</p></li>
+      <li class="step"><span class="step-n">05</span><div class="step-h"><b>Передача</b><span class="step-time">1 день</span></div><p>Кабинет на вашем адресе, инструкция и обучение, выгрузка данных в один клик. Дальше — по желанию: поддержка или новые блоки.</p></li>
+    </ol>
+  </section>
+
+  <!-- ПРИНЦИПЫ -->
+  <section class="sec reveal">
+    <div class="sec-head">
+      <span class="sec-num">07</span>
+      <h2>Почему на это можно положиться</h2>
+    </div>
+    <div class="prins">
+      <div class="prin"><span class="prin-i">🛡</span><b>«Готово» — это не «собралось»</b><p>Готовым считается только то, что вы открыли, ввели свои данные, перезагрузили — и всё на месте. У меня это записанное правило работы, а не обещание на словах.</p></div>
+      <div class="prin"><span class="prin-i">🗄</span><b>Данные остаются вашими</b><p>Выгрузка всех данных в один клик, копия по кнопке, напоминание сделать копию. Кабинет можно забрать и открыть на другом компьютере.</p></div>
+      <div class="prin"><span class="prin-i">🧩</span><b>Ничего лишнего на экране</b><p>Кабинет собирается под то, как работаете вы, а не под то, как «принято» в готовых сервисах. Нет блока — нет и кнопки.</p></div>
+      <div class="prin"><span class="prin-i">💼</span><b>Объясняю без технических слов</b><p>Я финансовый аналитик: сначала разбираюсь, как устроены ваша работа и ваши цифры, и только потом собираю интерфейс. На каждом шаге видно, что происходит и что будет дальше.</p></div>
+    </div>
+  </section>
+
+  <!-- ФОРМАТЫ -->
+  <section class="sec reveal" id="stoimost">
+    <div class="sec-head">
+      <span class="sec-num">08</span>
+      <h2>Форматы работы</h2>
+      <p class="sec-lede">Стоимость называю в карте задачи — после разговора, когда понятно, что именно нужно. Ниже — из чего выбирать.</p>
+    </div>
+    <div class="plans">
+      <div class="plan">
+        <b class="n">Разбор и карта</b>
+        <div class="price">Бесплатно</div>
+        <div class="sub">Разговор и одна страница с планом</div>
+        <ul>
+          <li><span class="ic ic-check">✓</span>Разбираем, как устроен ваш рабочий день</li>
+          <li><span class="ic ic-check">✓</span>Какие блоки нужны, а какие — нет</li>
+          <li><span class="ic ic-check">✓</span>Срок и стоимость до начала работы</li>
+          <li><span class="ic ic-check">✓</span>Ни к чему не обязывает</li>
+        </ul>
+        <a class="btn btn-outline btn-block" href="#zayavka">Начать с разбора</a>
+      </div>
+      <div class="plan feat">
+        <span class="plan-mark">Чаще всего берут</span>
+        <b class="n">Стартовый кабинет</b>
+        <div class="price">2–3 недели</div>
+        <div class="sub">3–4 блока · первая рабочая версия</div>
+        <ul>
+          <li><span class="ic ic-check">✓</span>Расписание, клиенты, деньги, отметки</li>
+          <li><span class="ic ic-check">✓</span>Свой адрес и ярлык на рабочем столе</li>
+          <li><span class="ic ic-check">✓</span>Выгрузка данных и копии</li>
+          <li><span class="ic ic-check">✓</span>2 недели правок после запуска</li>
+        </ul>
+        <a class="btn btn-primary btn-block" href="#zayavka">Обсудить</a>
+      </div>
+      <div class="plan">
+        <b class="n">Рабочий кабинет</b>
+        <div class="price">4–6 недель</div>
+        <div class="sub">До 8 блоков · месяц сопровождения</div>
+        <ul>
+          <li><span class="ic ic-check">✓</span>Всё из стартового плюс материалы и отчёты</li>
+          <li><span class="ic ic-check">✓</span>Видео и доска, напоминания, аналитика</li>
+          <li><span class="ic ic-check">✓</span>Месяц правок на живой работе</li>
+          <li><span class="ic ic-check">✓</span>Обучение и инструкция</li>
+        </ul>
+        <a class="btn btn-outline btn-block" href="#zayavka">Обсудить</a>
+      </div>
+      <div class="plan">
+        <b class="n">Под ключ</b>
+        <div class="price">От 6 недель</div>
+        <div class="sub">Всё, что нужно вашей работе</div>
+        <ul>
+          <li><span class="ic ic-check">✓</span>Онлайн-запись для ваших клиентов</li>
+          <li><span class="ic ic-check">✓</span>Помощник ИИ на ваших данных</li>
+          <li><span class="ic ic-check">✓</span>Доступ для нескольких сотрудников</li>
+          <li><span class="ic ic-check">✓</span>Поддержка и развитие после запуска</li>
+        </ul>
+        <a class="btn btn-outline btn-block" href="#zayavka">Обсудить</a>
+      </div>
+    </div>
+    <p class="plans-note">Доработки после запуска — по часам или пакетом. Подписки за «пользование» нет: кабинет ваш.</p>
+  </section>
+
+  <!-- ВОПРОСЫ -->
+  <section class="sec reveal" id="voprosy">
+    <div class="sec-head">
+      <span class="sec-num">09</span>
+      <h2>Частые вопросы</h2>
+    </div>
+    <div class="faq">
+      <details><summary>Чем это отличается от готовой CRM или сервиса по подписке?</summary><p>Готовый сервис заставляет подстроить работу под себя: там половина кнопок лишние, а нужного как раз нет. Кабинет собирается наоборот — от вашего рабочего дня. И вы за него платите один раз, а не каждый месяц за чужие функции.</p></details>
+      <details><summary>Сколько времени это займёт у меня?</summary><p>Один разговор в начале и примерно полчаса в неделю на замечания, когда появится первая версия. Всё остальное — моя часть: логика, экраны, тексты, проверка.</p></details>
+      <details><summary>Где будут храниться данные?</summary><p>Два варианта на выбор. Либо кабинет полностью офлайн — данные лежат только на вашем компьютере и никуда не уходят. Либо на вашем адресе в интернете, чтобы открывать с любого устройства. В обоих случаях есть выгрузка всех данных в один клик.</p></details>
+      <details><summary>А если потом понадобится что-то поменять?</summary><p>Кабинет собран из блоков, поэтому новый блок добавляется, а не переписывается всё заново. Мелкие правки — по часам, большие — отдельной задачей с такой же картой и сроком.</p></details>
+      <details><summary>Кабинет — это сайт или программа?</summary><p>И то и другое сразу. Открывается по ссылке в браузере, ставится ярлыком на рабочий стол как обычная программа, работает на телефоне. Ничего устанавливать и обновлять вручную не нужно.</p></details>
+      <details><summary>Что, если результат мне не понравится?</summary><p>Поэтому работа разбита на шаги. Сначала бесплатная карта задачи — вы видите план и цену до старта. Потом первая рабочая версия, которую вы открываете и пробуете на своих данных. Вы понимаете, что получаете, задолго до финала.</p></details>
+      <details><summary>Можно дать доступ сотруднику?</summary><p>Да. Настраиваются роли: кто-то видит только своё расписание, кто-то — деньги и отчёты. Это отдельный блок, его закладываем на этапе карты.</p></details>
+      <details><summary>Вы работаете только с обучением?</summary><p>Нет. Кабинет — это способ, а не отрасль. Разница между репетитором, фотографом и отделом внутри компании — в названиях сущностей и в паре блоков, а не в устройстве инструмента.</p></details>
+    </div>
+  </section>
+
+  <!-- ЗАЯВКА -->
+  <section class="sec reveal" id="zayavka" style="padding-bottom:32px">
+    <div class="form-wrap">
+      <div class="form-side">
+        <span class="sec-num">10</span>
+        <h2>Расскажите о своей задаче</h2>
+        <p class="sec-lede">Не нужно формулировать техническое задание. Достаточно описать своими словами, чем вы занимаетесь и что отнимает время. Дальше — разговор и бесплатная карта задачи.</p>
+        <ul>
+          <li><span class="ic ic-check">✓</span>Отвечаю в течение рабочего дня</li>
+          <li><span class="ic ic-check">✓</span>Разбор и план — бесплатно и ни к чему не обязывают</li>
+          <li><span class="ic ic-check">✓</span>Если задача не моя — скажу честно и подскажу, куда смотреть</li>
+        </ul>
+        <div class="contacts">
+          <p>Или напрямую</p>
+          <a href="https://t.me/InnaOdintsov" target="_blank" rel="noreferrer">Telegram @InnaOdintsov</a>
+          <a href="mailto:inna_odincova@mail.ru">inna_odincova@mail.ru</a>
+        </div>
+      </div>
+
+      <div>
+        <form class="req" id="reqForm" novalidate>
+          <div class="f-row">
+            <div class="f"><label for="fName">Как к вам обращаться</label><input id="fName" name="Имя" placeholder="Имя" autocomplete="name"></div>
+            <div class="f"><label for="fContact">Как с вами связаться</label><input id="fContact" name="Контакт" placeholder="Телефон, почта или @ник в Telegram"></div>
+          </div>
+          <div class="f-row">
+            <div class="f"><label for="fDir">Направление</label>
+              <select id="fDir" name="Направление">
+                <option value="">Выберите или пропустите</option>
+                <option>Репетитор, преподаватель</option>
+                <option>Школа, курсы, детский центр</option>
+                <option>Фотограф, видеограф</option>
+                <option>Мастер услуг: салон, студия, кабинет</option>
+                <option>Медицина, клиника, психолог</option>
+                <option>Юрист, бухгалтер, консультант</option>
+                <option>Магазин, склад, производство</option>
+                <option>Отдел внутри компании</option>
+                <option>Другое направление</option>
+              </select>
+            </div>
+            <div class="f"><label for="fWhen">Когда нужно</label>
+              <select id="fWhen" name="Срок">
+                <option value="">Выберите или пропустите</option>
+                <option>Нужно как можно скорее</option>
+                <option>В ближайшие 1–2 месяца</option>
+                <option>Пока присматриваюсь</option>
+              </select>
+            </div>
+          </div>
+          <div class="f"><label for="fMsg">Что сейчас отнимает больше всего времени</label>
+            <textarea id="fMsg" name="Сообщение" placeholder="Пара предложений своими словами: чем занимаетесь, где сейчас ведёте записи, что теряется и что хотелось бы видеть в одном окне."></textarea>
+          </div>
+          <label class="consent"><input type="checkbox" id="fOk"><span>Согласен на обработку моих контактов, чтобы Инна могла ответить. Что именно хранится и как это удалить — <a href="politika.html">в политике обработки данных</a>.</span></label>
+          <div class="msg" id="formMsg"></div>
+          <div class="f-foot">
+            <button class="btn btn-primary btn-lg" type="submit" id="fBtn">Отправить заявку</button>
+            <span class="f-note">Данные попадают только ко мне и никуда не передаются.</span>
+          </div>
+        </form>
+
+        <div class="done-box" id="doneBox">
+          <b>Заявка отправлена</b>
+          <p id="doneText">Спасибо. Я прочитаю её и отвечу в течение рабочего дня — сначала разберёмся, как устроена ваша работа, и только потом будем говорить про кабинет.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="f-in">
+    <div class="f-brand-col">
+      <div class="f-brand"><span class="f-mark">ИО</span><span class="f-name">Инна Одинцова</span></div>
+      <p class="f-tag">Собираю кабинеты — приложения, в которых вся работа помещается в одно окно. Любое направление: от репетитора до отдела внутри компании.</p>
+    </div>
+    <div class="f-col">
+      <b>Разделы</b>
+      <a href="#chto-takoe">Что такое кабинет</a>
+      <a href="#konstruktor">Из чего собирается</a>
+      <a href="#keysy">Кейсы</a>
+      <a href="#stoimost">Форматы</a>
+      <a href="#voprosy">Частые вопросы</a>
+    </div>
+    <div class="f-col">
+      <b>Связаться</b>
+      <a href="#zayavka">Оставить заявку</a>
+      <a href="https://t.me/InnaOdintsov" target="_blank" rel="noreferrer">@InnaOdintsov</a>
+      <a href="mailto:inna_odincova@mail.ru">inna_odincova@mail.ru</a>
+      <a href="politika.html">Обработка данных</a>
+    </div>
+  </div>
+  <div class="f-bot">
+    <span>© 2026 Инна Одинцова</span>
+  </div>
+</footer>
+
+<script>
+/* ===== Меню ===== */
+var hdr = document.getElementById('hdr');
+var burger = document.getElementById('burger');
+var mob = document.getElementById('mob');
+
+window.addEventListener('scroll', function () {
+  hdr.classList.toggle('scrolled', window.scrollY > 8);
+}, { passive: true });
+
+burger.addEventListener('click', function () {
+  mob.classList.toggle('open');
+  burger.textContent = mob.classList.contains('open') ? '✕' : '☰';
+});
+mob.querySelectorAll('a').forEach(function (a) {
+  a.addEventListener('click', function () {
+    mob.classList.remove('open');
+    burger.textContent = '☰';
+  });
+});
+
+/* ===== Появление разделов при прокрутке ===== */
+if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+} else {
+  document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('on'); });
+}
+
+/* ===== Конструктор кабинета ===== */
+var MODULES = [
+  { id: 'schedule', icon: '🗓', title: 'Расписание', days: 5, core: true, text: 'День, неделя, месяц. Повторяющиеся встречи, контроль наложений, перенос одним движением.' },
+  { id: 'clients', icon: '👥', title: 'Клиенты и карточки', days: 4, core: true, text: 'Все, с кем вы работаете: контакты, история, заметки, вложения. Группы и индивидуальные.' },
+  { id: 'money', icon: '💰', title: 'Деньги', days: 5, core: true, text: 'Начислено, оплачено, долг. Разовая оплата, абонемент, предоплата — считается само.' },
+  { id: 'marks', icon: '✅', title: 'Отметки и посещаемость', days: 3, core: true, text: 'Был / не был / перенос, причина пропуска, напоминание об неотмеченных встречах.' },
+  { id: 'files', icon: '📁', title: 'Материалы и файлы', days: 4, text: 'Загрузка документов, привязка к теме или клиенту, просмотр PDF прямо внутри кабинета.' },
+  { id: 'reports', icon: '📄', title: 'Отчёты и документы', days: 4, text: 'Готовый Word или таблица по одной кнопке: акт, отчёт, ведомость, письмо клиенту.' },
+  { id: 'video', icon: '🎥', title: 'Видео и доска', days: 3, text: 'Постоянная комната для каждого клиента: звонок и общая доска в одном окне.' },
+  { id: 'booking', icon: '🔗', title: 'Онлайн-запись', days: 5, text: 'Отдельная страница, где клиент сам выбирает свободное время. К вам приходит заявка.' },
+  { id: 'reminders', icon: '🔔', title: 'Напоминания', days: 3, text: 'Себе — о том, что не отмечено и не оплачено. Клиенту — о встрече и об оплате.' },
+  { id: 'ai', icon: '✨', title: 'Помощник ИИ', days: 4, text: 'Черновик плана, письма, разбора — на ваших данных. Работает и без платного ключа.' },
+  { id: 'analytics', icon: '📊', title: 'Сводка и аналитика', days: 4, text: 'Сколько заработано, какая загрузка, что просело. Без выгрузок в Excel вручную.' },
+  { id: 'offline', icon: '📴', title: 'Офлайн и ярлык', days: 3, text: 'Открывается как обычная программа с рабочего стола и работает без интернета.' },
+  { id: 'backup', icon: '💾', title: 'Копии и выгрузка', days: 2, text: 'Кнопка «сохранить копию», напоминание раз в неделю, выгрузка всех данных к себе.' }
+];
+
+var selected = MODULES.filter(function (m) { return m.core; }).map(function (m) { return m.id; });
+var modsEl = document.getElementById('mods');
+
+function plural(n, one, few, many) {
+  var n10 = n % 10, n100 = n % 100;
+  if (n10 === 1 && n100 !== 11) return one;
+  if (n10 >= 2 && n10 <= 4 && (n100 < 10 || n100 >= 20)) return few;
+  return many;
+}
+
+function renderMods() {
+  modsEl.innerHTML = '';
+  MODULES.forEach(function (m) {
+    var on = selected.indexOf(m.id) !== -1;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'mod' + (on ? ' on' : '');
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    b.innerHTML = '<span class="mod-top"><span class="mod-i">' + m.icon + '</span>' +
+      '<span class="mod-t">' + m.title + '</span>' +
+      '<span class="mod-box">' + (on ? '✓' : '') + '</span></span>' +
+      '<p>' + m.text + '</p>';
+    b.addEventListener('click', function () {
+      var i = selected.indexOf(m.id);
+      if (i === -1) { selected.push(m.id); } else { selected.splice(i, 1); }
+      renderMods();
+      renderSum();
+    });
+    modsEl.appendChild(b);
+  });
+}
+
+function renderSum() {
+  var chosen = MODULES.filter(function (m) { return selected.indexOf(m.id) !== -1; });
+  var days = 6 + chosen.reduce(function (s, m) { return s + m.days; }, 0);
+  var weeks = Math.max(2, Math.round(days / 5));
+  document.getElementById('sumCount').textContent = chosen.length;
+  document.getElementById('sumCountLabel').textContent = plural(chosen.length, 'блок выбран', 'блока выбрано', 'блоков выбрано');
+  document.getElementById('sumWeeks').textContent = '~' + weeks;
+  document.getElementById('sumWeeksLabel').textContent = plural(weeks, 'неделя', 'недели', 'недель') + ' до рабочей версии';
+}
+
+renderMods();
+renderSum();
+
+/* ===== Форма заявки ===== */
+var FORM_ENDPOINT = 'https://formsubmit.co/ajax/inna_odincova@mail.ru';
+
+var form = document.getElementById('reqForm');
+var msg = document.getElementById('formMsg');
+var btn = document.getElementById('fBtn');
+var doneBox = document.getElementById('doneBox');
+
+function showError(text) {
+  msg.textContent = text;
+  msg.className = 'msg err';
+}
+
+form.addEventListener('submit', function (e) {
+  e.preventDefault();
+  msg.className = 'msg';
+
+  var name = document.getElementById('fName').value.trim();
+  var contact = document.getElementById('fContact').value.trim();
+
+  if (name.length < 2) { showError('Напишите, как к вам обращаться.'); return; }
+  if (contact.length < 3) { showError('Оставьте способ связи — телефон, почту или ник в Telegram.'); return; }
+  if (!document.getElementById('fOk').checked) {
+    showError('Поставьте галочку согласия — без неё я не имею права хранить ваши контакты.');
+    return;
+  }
+
+  var data = {
+    'Имя': name,
+    'Контакт': contact,
+    'Направление': document.getElementById('fDir').value || '—',
+    'Срок': document.getElementById('fWhen').value || '—',
+    'Сообщение': document.getElementById('fMsg').value.trim() || '—',
+    '_subject': 'Заявка с сайта: ' + name,
+    '_template': 'table'
+  };
+
+  btn.disabled = true;
+  btn.textContent = 'Отправляю…';
+
+  fetch(FORM_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify(data)
+  }).then(function (r) {
+    if (!r.ok) { throw new Error('bad response'); }
+    return r.json();
+  }).then(function () {
+    form.style.display = 'none';
+    document.getElementById('doneText').textContent =
+      'Спасибо, ' + name.split(' ')[0] + '. Я прочитаю заявку и отвечу в течение рабочего дня — сначала разберёмся, как устроена ваша работа, и только потом будем говорить про кабинет.';
+    doneBox.classList.add('show');
+  }).catch(function () {
+    btn.disabled = false;
+    btn.textContent = 'Отправить заявку';
+    showError('Не получилось отправить — возможно, пропала связь. Напишите напрямую: Telegram @InnaOdintsov или inna_odincova@mail.ru');
+  });
+});
+
+</script>
+</body>
+</html>
