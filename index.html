@@ -771,23 +771,29 @@ footer { background: var(--navy); color: #e6ecf2; padding: 64px 24px 32px; margi
 .reveal { opacity: 1; transform: none; }
 :focus-visible { outline: 3px solid var(--blue); outline-offset: 4px; }
 @media(max-width:700px) { .cases,.cols3 {grid-template-columns:1fr;} .hero {padding-top:40px;} .hero-stats {gap:20px;} .btn {white-space:normal;} }
+
+/* Revision 3: clear hierarchy and quieter first screen. */
+.hero-glow,.hero-grid { display:none; }
+.hero { padding:48px 0; }
+.hero2 h1 { margin-top:0; font-size:clamp(36px,4.5vw,58px); }
+.hero .lede { max-width:64ch; }
+.hero .lede strong { font-weight:500; }
+.hero-actions { margin-top:24px; }
+.sec { padding:48px 0; }
+.sec-head { margin-bottom:28px; }
+.hdr-in { gap:20px; }
+.nav { gap:24px; }
 </style>
 </head>
 <body>
 <header class="hdr" id="hdr">
   <div class="hdr-in">
-    <a class="brand" href="#top">
-      <span class="mark">ИО</span>
-      <span>
-        <span class="brand-name">Инна Одинцова</span><br>
-        <span class="brand-role">цифровые продукты</span>
-      </span>
-    </a>
-    <nav class="nav" aria-label="Основная навигация"><a href="#about">Обо мне</a><a href="#keysy">Проекты</a><a href="#napravleniya">Направления</a><a href="#rabota">Как работаем</a></nav>
+    <a class="brand" href="#about" aria-label="Инна Одинцова — обо мне"><span class="mark">ИО</span></a>
+    <nav class="nav" aria-label="Основная навигация"><a href="#about">Обо мне</a><a href="#keysy">Проекты</a><a href="#rabota">Мой подход</a><a href="#zayavka">Контакты</a></nav>
     <a class="btn btn-primary btn-sm hdr-cta" href="#zayavka">Обсудить задачу</a>
     <button class="burger" id="burger" aria-label="Меню" aria-expanded="false" aria-controls="mob">☰</button>
   </div>
-  <div class="mob" id="mob"><a href="#about">Обо мне</a><a href="#keysy">Проекты</a><a href="#napravleniya">Направления</a><a href="#rabota">Как работаем</a><a class="btn btn-primary" href="#zayavka">Обсудить задачу</a></div>
+  <div class="mob" id="mob"><a href="#about">Обо мне</a><a href="#keysy">Проекты</a><a href="#rabota">Мой подход</a><a href="#zayavka">Контакты</a></div>
 </header>
 
 <main id="top">
@@ -797,18 +803,12 @@ footer { background: var(--navy); color: #e6ecf2; padding: 64px 24px 32px; margi
     <span class="hero-glow"></span>
     <span class="hero-grid"></span>
     <div>
-      <span class="eyebrow">Обо мне</span>
+      
       <h1>Инна Одинцова</h1>
       <p class="lede"><strong>Финансовый аналитик и автор цифровых продуктов.</strong></p>
       <p class="lede">Создаю приложения и обучающие тренажёры с помощью искусственного интеллекта. Продумываю идею, логику и сценарии использования — от повседневных задач до практики финансового анализа. Проверяю решения и дорабатываю их по результатам использования.</p>
       <div class="hero-actions">
         <a class="btn btn-primary btn-lg" href="#keysy">Посмотреть проекты</a>
-        <a class="btn btn-outline btn-lg" href="#zayavka">Обсудить задачу</a>
-      </div>
-      <div class="hero-stats">
-        <div class="hero-stat"><span>Для жизни</span><b>Планы и повседневные дела</b></div>
-        <div class="hero-stat"><span>Для работы</span><b>Кабинеты специалистов</b></div>
-        <div class="hero-stat"><span>Для обучения</span><b>Практика финансового анализа</b></div>
       </div>
     </div>
   </section>
@@ -817,7 +817,7 @@ footer { background: var(--navy); color: #e6ecf2; padding: 64px 24px 32px; margi
 
   <!-- КАК РАБОТАЕМ -->
 
-  <section class="sec reveal" id="keysy"><div class="sec-head"><span class="sec-num">Портфолио</span><h2>Проекты</h2><p class="sec-lede">Приложения и тренажёры, над которыми я работаю. В каждой карточке указан текущий формат знакомства и статус проекта.</p></div><div class="cases"><article class="case" id="project-day"><div class="case-top"><div><h3 class="case-name">Точка дня</h3><span class="case-kind">Личное приложение</span></div></div><span class="project-status">Развивается · доступ по приглашению</span><p>Планы, дела, заметки и личные финансы в одном приложении для повседневной жизни.</p><details class="project-details"><summary>Подробнее о проекте</summary><p>Календарь помогает видеть встречи и дела, заметки — сохранять мысли, финансовый раздел — учитывать расходы. В приложении предусмотрено облачное сохранение после входа. Возможности продолжают развиваться.</p></details><div class="case-tags"><span class="tag">планирование</span><span class="tag">заметки</span><span class="tag">финансы</span></div><a class="btn btn-outline" href="#zayavka" data-project="Точка дня">Запросить приглашение</a></article>
+  <section class="sec reveal" id="keysy"><div class="sec-head"><h2>Проекты</h2><p class="sec-lede">Личные приложения, профессиональные кабинеты и практика финансового анализа.</p></div><div class="cases"><article class="case" id="project-day"><div class="case-top"><div><h3 class="case-name">Точка дня</h3><span class="case-kind">Личное приложение</span></div></div><span class="project-status">Развивается · доступ по приглашению</span><p>Планы, дела, заметки и личные финансы в одном приложении для повседневной жизни.</p><details class="project-details"><summary>Подробнее о проекте</summary><p>Календарь помогает видеть встречи и дела, заметки — сохранять мысли, финансовый раздел — учитывать расходы. В приложении предусмотрено облачное сохранение после входа. Возможности продолжают развиваться.</p></details><div class="case-tags"><span class="tag">планирование</span><span class="tag">заметки</span><span class="tag">финансы</span></div><a class="btn btn-outline" href="#zayavka" data-project="Точка дня">Запросить приглашение</a></article>
 <article class="case" id="project-trainer1"><div class="case-top"><div><h3 class="case-name">Тренажёр №1</h3><span class="case-kind">Обучение финансовому анализу</span></div></div><span class="project-status">Рабочая версия · дорабатывается</span><p>Последовательное изучение финансового анализа: понятия, формулы, расчёты и практические задания.</p><details class="project-details"><summary>Подробнее о проекте</summary><p>47 занятий для освоения основ и перехода от формулы к её применению. Можно начать обучение самостоятельно. Содержание и пользовательские сценарии продолжают проверяться и дорабатываться.</p></details><div class="case-tags"><span class="tag">47 занятий</span><span class="tag">расчёты</span><span class="tag">самопроверка</span></div><a class="btn btn-outline" href="https://innaodincova-finpro.github.io/fintrainer/" target="_blank" rel="noopener noreferrer">Открыть рабочую версию</a></article>
 <article class="case" id="project-trainer2"><div class="case-top"><div><h3 class="case-name">Тренажёр №2</h3><span class="case-kind">Практика финансового аналитика</span></div></div><span class="project-status">Рабочая версия · дорабатывается</span><p>Самостоятельный анализ подготовленного кейса: от приёмки исходных данных до заключения руководству.</p><details class="project-details"><summary>Подробнее о проекте</summary><p>Кейс ООО «Вектор»: восемь этапов, включая прибыльность, финансовое состояние, оборотный капитал, денежные потоки и прогноз. Начать можно независимо от первого тренажёра. Представлена работа в развитии; демонстрацию можно запросить у автора.</p></details><div class="case-tags"><span class="tag">учебный кейс</span><span class="tag">8 этапов</span><span class="tag">выводы</span></div><a class="btn btn-outline" href="#zayavka" data-project="Тренажёр №2">Запросить демонстрацию</a></article>
 <article class="case" id="project-tutor"><div class="case-top"><div><h3 class="case-name">Кабинет репетитора</h3><span class="case-kind">Индивидуальный проект для преподавателя математики</span></div></div><span class="project-status">Индивидуальный проект · развивается</span><p>Ученики, расписание, домашние задания, учебные материалы и учёт оплат в одном рабочем пространстве.</p><details class="project-details"><summary>Подробнее о проекте</summary><p>Проект создан под работу конкретного преподавателя. Задача — связать подготовку, проведение занятия и последующий учёт. На сайте представлено описание проекта; знакомство с возможностями обсуждается отдельно.</p></details><div class="case-tags"><span class="tag">ученики</span><span class="tag">расписание</span><span class="tag">материалы</span></div><a class="btn btn-outline" href="#zayavka" data-project="Кабинет репетитора">Обсудить похожую задачу</a></article>
@@ -829,7 +829,7 @@ footer { background: var(--navy); color: #e6ecf2; padding: 64px 24px 32px; margi
   <section class="sec reveal" id="rabota">
     <div class="sec-head">
 
-      <h2>Как проходит работа</h2>
+      <h2>Мой подход к созданию продукта</h2>
       <p class="sec-lede">Пять этапов: от обсуждения задачи до передачи приложения. Сроки зависят от сложности и согласуются заранее.</p>
     </div>
     <ol class="steps">
@@ -951,7 +951,7 @@ footer { background: var(--navy); color: #e6ecf2; padding: 64px 24px 32px; margi
     </div>
     <div class="f-col">
       <b>Разделы</b>
-      <a href="#about">Главная</a>
+      <a href="#about">Обо мне</a>
       <a href="#keysy">Проекты</a>
       <a href="#stoimost">Форматы</a>
       <a href="#voprosy">Вопросы</a>
@@ -973,7 +973,7 @@ footer { background: var(--navy); color: #e6ecf2; padding: 64px 24px 32px; margi
 
 <div class="dock" id="dock">
   <span class="dock-lbl">Раздел</span>
-  <select class="dock-sel" id="dockSel" aria-label="Перейти к разделу"><option value="#about">Обо мне</option><option value="#keysy">Проекты</option><option value="#napravleniya">Направления</option><option value="#rabota">Как работаем</option><option value="#stoimost">Форматы</option><option value="#voprosy">Вопросы</option></select>
+  <select class="dock-sel" id="dockSel" aria-label="Перейти к разделу"><option value="#about">Обо мне</option><option value="#keysy">Проекты</option><option value="#napravleniya">Направления</option><option value="#rabota">Мой подход</option><option value="#stoimost">Форматы</option><option value="#voprosy">Вопросы</option></select>
   <a class="btn btn-primary" href="#zayavka">Обсудить задачу</a>
 </div>
 
