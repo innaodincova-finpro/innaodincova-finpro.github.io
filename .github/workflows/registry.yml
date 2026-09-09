@@ -1,0 +1,32 @@
+name: Проверка отдельного Реестра
+on:
+  pull_request:
+    paths: ['reestr-tochki/**', '.github/workflows/registry.yml']
+  push:
+    branches: [main]
+    paths: ['reestr-tochki/**', '.github/workflows/registry.yml']
+permissions:
+  contents: read
+jobs:
+  registry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: innaodincova-finpro/tochka-dnya
+          path: tochka-dnya
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+        working-directory: tochka-dnya
+      - run: npm install --no-save --package-lock=false playwright@1.55.0
+        working-directory: tochka-dnya
+      - run: npx playwright install --with-deps chromium
+        working-directory: tochka-dnya
+      - run: node reestr-tochki/check.cjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: registry-install-previews
+          path: registry-install-*.png
